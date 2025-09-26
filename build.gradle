@@ -1,4 +1,5 @@
 //file:noinspection SpellCheckingInspection
+//file:noinspection VulnerableLibrariesLocal
 plugins {
     id 'java'
     id 'application'
@@ -8,6 +9,10 @@ plugins {
 version = '1.0'
 
 repositories { mavenCentral() }
+
+dependencies {
+    implementation 'mysql:mysql-connector-java:8.0.33'
+}
 
 javafx {
     version = '22.0.2'
