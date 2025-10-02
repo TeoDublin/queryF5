@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="root" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.views.viewQueries">
+    <StackPane fx:id="firstQueryWatch" style="-fx-border-color: #888; -fx-border-style: dashed; -fx-border-width: 2; -fx-alignment: center;" VBox.vgrow="SOMETIMES">
+        <VBox.margin>
+            <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
+        </VBox.margin>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Label text="Create new query watch" textFill="#0000009e">
+            <font>
+                <Font size="28.0" />
+            </font>
+        </Label>
+    </StackPane>
+    <HBox fx:id="vboxNewQuery" VBox.vgrow="NEVER">
+        <Button mnemonicParsing="false" prefWidth="600.0" text="NEW QUERY" fx:id="btnNewQuery">
+           <HBox.margin>
+               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+           </HBox.margin>
+        </Button>
+    </HBox>
+</VBox>

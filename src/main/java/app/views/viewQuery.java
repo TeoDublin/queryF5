@@ -1,75 +1,51 @@
 package app.views;
 
-import app.Sql;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
+import app.Queries;
+import app.objs.objQueries;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class viewQuery implements Initializable {
-    private Sql sql;
-    public TextArea textArea;
-    public TableView<ObservableList<String>> tableView;
+    public boolean isEdit = false;
+    public String uniq;
+    public TextArea textArea1;
+    public Spinner<Integer> spinner1;
+    public Button btnGo;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        textArea.textProperty().addListener((_, _, newText) -> {
-            try {
-                createRandomTable(newText);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+
+        spinner1.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 60000, 1000, 500)
+        );
+
+        btnGo.setOnAction(_ -> {
+           String query = textArea1.getText();
+           int milliSeconds = spinner1.getValue();
+           if(query.isEmpty()||milliSeconds==0){
+               Alert alert = new Alert(Alert.AlertType.INFORMATION);
+               alert.setTitle("Error");
+               alert.setHeaderText(null);
+               alert.setContentText("Please enter a query and a milli seconds");
+               alert.showAndWait();
+           }
+           else{
+               if(!isEdit){
+                   Queries.addQuery(query, milliSeconds);
+               }
+               else{
+                   Queries.queriesList.put(uniq, new objQueries(query,milliSeconds));
+               }
+               Stage stage = (Stage) btnGo.getScene().getWindow();
+               stage.close();
+           }
+
         });
     }
 
-    private void createRandomTable(String query) throws SQLException {
-        tableView.getColumns().clear();
-        tableView.getItems().clear();
-
-        Sql sql = _sql();
-        assert sql != null;
-
-        ResultSet rs = sql.select(query);
-
-        int colCount = rs.getMetaData().getColumnCount();
-        for (int i = 1; i <= colCount; i++) {
-            TableColumn<ObservableList<String>, String> col = new TableColumn<>(rs.getMetaData().getColumnName(i));
-            int finalCIndex = i - 1;
-            col.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().get(finalCIndex)));
-            tableView.getColumns().add(col);
-        }
-
-        while (rs.next()) {
-            ObservableList<String> row = FXCollections.observableArrayList();
-            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                row.add(rs.getString(i));
-            }
-            tableView.getItems().add(row);
-        }
-
-    }
-
-    private Sql _sql() {
-        if(sql != null){
-            return sql;
-        }
-        else{
-            try{
-                Sql newSql = new Sql();
-                sql  = newSql;
-                return newSql;
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 }
